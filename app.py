@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, send_from_directory,send_file, session, redirect
+from flask import Flask, jsonify, request
 from datetime import datetime, timedelta
 import os
 import re
@@ -27,17 +28,18 @@ def get_random_numbers_from_list(data_list, num_samples):
     return list(set(random.sample(data_list, num_samples)))
 
 
-
-@app.route('/')
-def home():
+def ping():
     for x in os.listdir('static/ips'):
         os.remove(app.root_path+'/static/ips/'+x)
-    nodos_existentes_int = get_random_numbers_from_list(range(1,255), random.sample(range(1,50), 1)[0])
+    nodos_existentes_int = get_random_numbers_from_list(range(1,255), random.sample(range(5,10), 1)[0])
     nodos_existentes = [f'192.168.0.{x}' for x in nodos_existentes_int]
     for n in nodos_existentes_int:
         with open(f'{app.root_path}/static/ips/nuc_{n}.txt','w+') as file:
             for x in get_random_numbers_from_list(nodos_existentes_int, random.choice(range(1,len(nodos_existentes_int)+1))):
                 file.write(f'192.168.0.{x}\n')
+    with open(f'{app.root_path}/static/ips/laptop.txt','w+') as file:
+        for x in get_random_numbers_from_list(nodos_existentes_int, random.choice(range(1,len(nodos_existentes_int)+1))):
+            file.write(f'192.168.0.{x}\n')
 
     print(os.listdir(app.root_path+'/static/ips'))
     base =''' // Define nodes with fixed positions
@@ -45,7 +47,7 @@ def home():
     '''
    
     connections = {}
-    for x in os.listdir(app.root_path+'/static/ips'):
+    for x in [y for y in os.listdir(app.root_path+'/static/ips') if 'nuc' in y]:
         id_origen = x.split('_')[1].split('.')[0]
         id_origen = re.sub('\n','',id_origen)
         
@@ -58,6 +60,15 @@ def home():
                 id = line.split('.')[-1]
                 id = re.sub('\n','',id)
                 connections[id_origen]+=[id]
+    
+    base +=  "{ id: 0, label: 'Laptop', color: 'lightgray', x: 0, y:  -100},\n"
+    connections['0'] = []
+    with open(app.root_path+'/static/ips/laptop.txt','r') as file:
+        for line in file.readlines():
+            id = line.split('.')[-1]
+            id = re.sub('\n','',id)
+            connections['0']+=[id]
+
     base += ''']);
     // Define edges with custom colors
     const edges = new vis.DataSet([
@@ -80,10 +91,20 @@ def home():
 
     const network = new vis.Network(container, data, options);
 '''
-    with open(app.root_path+'/templates/base_index.html','r') as file,open(app.root_path+'/templates/index.html','w+') as index,open('algo.js','w+') as algo:
-        index.write(re.sub('script_re',base,file.read()))
-        algo.write(base)
-    return render_template('index.html',base=base)
+    return base
+
+@app.route('/')
+def home():
+    # with open(app.root_path+'/templates/base_index.html','r') as file,open(app.root_path+'/templates/index.html','w+') as index,open('algo.js','w+') as algo:
+    #     index.write(re.sub('script_re',base,file.read()))
+    #     algo.write(base)
+    
+    return render_template('index.html',base=ping())
+
+@app.route('/reload')
+def reload():
+    return ping(), 200, {'Content-Type': 'text/plain'}
+
 
 if __name__ == '__main__':
     # from waitress import serve

@@ -1,495 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vis.js Fixed Graph</title>
+  <title>Concexion de las NUC</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
   <style>
     #mynetwork {
       width: 100%;
       height: 600px;
-      border: 1px solid lightgray;
     }
   </style>
 </head>
+
 <body>
-  <h1>Conexiones del NUC</h1>
-  <div id="mynetwork"></div>
+  <div class="row">
+    <div class="col-2" style="min-height: 1000px;width: 100%;background-color: gainsboro;">
+    </div>
+    <div class="col-8" style="min-height: 100%;">
+      <div class="row">
+        <div class="col-12 text-center" style="margin-top: 100px;">
+          <h1>Conexiones de las NUC</h1>
+        </div>
+        <div class="col-12" style="margin-top: 50px;">
+
+          <h3 class="col-12 text-center">Tiempo restante antes de la proxima actualización: <span id="timer">5</span>
+          </h3>
+        </div>
+        <div class="row" id="mynetwork"></div>
+      </div>
+
+    </div>
+    <div class="col-2" style="min-height: 1000px;background-color: gainsboro;">
+    </div>
+  </div>
+
+
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+  <script id="for_ajax">
+
+  </script>
   <script>
-    // Define nodes with fixed positions
-    const nodes = new vis.DataSet([
-    { id: 100, label: '100', color: 'lightgray', x: -400+(100%16)*100, y: Math.round(100/16)*50 },
-{ id: 101, label: '101', color: 'lightgray', x: -400+(101%16)*100, y: Math.round(101/16)*50 },
-{ id: 113, label: '113', color: 'lightgray', x: -400+(113%16)*100, y: Math.round(113/16)*50 },
-{ id: 116, label: '116', color: 'lightgray', x: -400+(116%16)*100, y: Math.round(116/16)*50 },
-{ id: 132, label: '132', color: 'lightgray', x: -400+(132%16)*100, y: Math.round(132/16)*50 },
-{ id: 133, label: '133', color: 'lightgray', x: -400+(133%16)*100, y: Math.round(133/16)*50 },
-{ id: 16, label: '16', color: 'lightgray', x: -400+(16%16)*100, y: Math.round(16/16)*50 },
-{ id: 171, label: '171', color: 'lightgray', x: -400+(171%16)*100, y: Math.round(171/16)*50 },
-{ id: 172, label: '172', color: 'lightgray', x: -400+(172%16)*100, y: Math.round(172/16)*50 },
-{ id: 177, label: '177', color: 'lightgray', x: -400+(177%16)*100, y: Math.round(177/16)*50 },
-{ id: 181, label: '181', color: 'lightgray', x: -400+(181%16)*100, y: Math.round(181/16)*50 },
-{ id: 182, label: '182', color: 'lightgray', x: -400+(182%16)*100, y: Math.round(182/16)*50 },
-{ id: 184, label: '184', color: 'lightgray', x: -400+(184%16)*100, y: Math.round(184/16)*50 },
-{ id: 191, label: '191', color: 'lightgray', x: -400+(191%16)*100, y: Math.round(191/16)*50 },
-{ id: 196, label: '196', color: 'lightgray', x: -400+(196%16)*100, y: Math.round(196/16)*50 },
-{ id: 2, label: '2', color: 'lightgray', x: -400+(2%16)*100, y: Math.round(2/16)*50 },
-{ id: 206, label: '206', color: 'lightgray', x: -400+(206%16)*100, y: Math.round(206/16)*50 },
-{ id: 215, label: '215', color: 'lightgray', x: -400+(215%16)*100, y: Math.round(215/16)*50 },
-{ id: 219, label: '219', color: 'lightgray', x: -400+(219%16)*100, y: Math.round(219/16)*50 },
-{ id: 245, label: '245', color: 'lightgray', x: -400+(245%16)*100, y: Math.round(245/16)*50 },
-{ id: 37, label: '37', color: 'lightgray', x: -400+(37%16)*100, y: Math.round(37/16)*50 },
-{ id: 38, label: '38', color: 'lightgray', x: -400+(38%16)*100, y: Math.round(38/16)*50 },
-{ id: 40, label: '40', color: 'lightgray', x: -400+(40%16)*100, y: Math.round(40/16)*50 },
-{ id: 41, label: '41', color: 'lightgray', x: -400+(41%16)*100, y: Math.round(41/16)*50 },
-{ id: 42, label: '42', color: 'lightgray', x: -400+(42%16)*100, y: Math.round(42/16)*50 },
-{ id: 48, label: '48', color: 'lightgray', x: -400+(48%16)*100, y: Math.round(48/16)*50 },
-{ id: 58, label: '58', color: 'lightgray', x: -400+(58%16)*100, y: Math.round(58/16)*50 },
-{ id: 68, label: '68', color: 'lightgray', x: -400+(68%16)*100, y: Math.round(68/16)*50 },
-{ id: 8, label: '8', color: 'lightgray', x: -400+(8%16)*100, y: Math.round(8/16)*50 },
-]);
-    // Define edges with custom colors
-    const edges = new vis.DataSet([
-    { from: 100, to: 2, color: { color: 'green' } },
-{ from: 100, to: 132, color: { color: 'green' } },
-{ from: 100, to: 133, color: { color: 'green' } },
-{ from: 100, to: 8, color: { color: 'green' } },
-{ from: 100, to: 16, color: { color: 'green' } },
-{ from: 100, to: 37, color: { color: 'green' } },
-{ from: 100, to: 38, color: { color: 'green' } },
-{ from: 100, to: 40, color: { color: 'green' } },
-{ from: 100, to: 41, color: { color: 'green' } },
-{ from: 100, to: 42, color: { color: 'green' } },
-{ from: 100, to: 171, color: { color: 'green' } },
-{ from: 100, to: 172, color: { color: 'green' } },
-{ from: 100, to: 48, color: { color: 'green' } },
-{ from: 100, to: 177, color: { color: 'green' } },
-{ from: 100, to: 182, color: { color: 'green' } },
-{ from: 100, to: 184, color: { color: 'green' } },
-{ from: 100, to: 58, color: { color: 'green' } },
-{ from: 100, to: 191, color: { color: 'green' } },
-{ from: 100, to: 68, color: { color: 'green' } },
-{ from: 100, to: 196, color: { color: 'green' } },
-{ from: 100, to: 206, color: { color: 'green' } },
-{ from: 100, to: 215, color: { color: 'green' } },
-{ from: 100, to: 219, color: { color: 'green' } },
-{ from: 100, to: 100, color: { color: 'green' } },
-{ from: 100, to: 101, color: { color: 'green' } },
-{ from: 100, to: 113, color: { color: 'green' } },
-{ from: 100, to: 116, color: { color: 'green' } },
-{ from: 100, to: 245, color: { color: 'green' } },
-{ from: 101, to: 2, color: { color: 'green' } },
-{ from: 101, to: 132, color: { color: 'green' } },
-{ from: 101, to: 133, color: { color: 'green' } },
-{ from: 101, to: 8, color: { color: 'green' } },
-{ from: 101, to: 16, color: { color: 'green' } },
-{ from: 101, to: 37, color: { color: 'green' } },
-{ from: 101, to: 38, color: { color: 'green' } },
-{ from: 101, to: 40, color: { color: 'green' } },
-{ from: 101, to: 41, color: { color: 'green' } },
-{ from: 101, to: 42, color: { color: 'green' } },
-{ from: 101, to: 171, color: { color: 'green' } },
-{ from: 101, to: 172, color: { color: 'green' } },
-{ from: 101, to: 48, color: { color: 'green' } },
-{ from: 101, to: 177, color: { color: 'green' } },
-{ from: 101, to: 181, color: { color: 'green' } },
-{ from: 101, to: 182, color: { color: 'green' } },
-{ from: 101, to: 58, color: { color: 'green' } },
-{ from: 101, to: 191, color: { color: 'green' } },
-{ from: 101, to: 68, color: { color: 'green' } },
-{ from: 101, to: 196, color: { color: 'green' } },
-{ from: 101, to: 206, color: { color: 'green' } },
-{ from: 101, to: 215, color: { color: 'green' } },
-{ from: 101, to: 219, color: { color: 'green' } },
-{ from: 101, to: 101, color: { color: 'green' } },
-{ from: 101, to: 113, color: { color: 'green' } },
-{ from: 101, to: 116, color: { color: 'green' } },
-{ from: 101, to: 245, color: { color: 'green' } },
-{ from: 113, to: 2, color: { color: 'green' } },
-{ from: 113, to: 132, color: { color: 'green' } },
-{ from: 113, to: 133, color: { color: 'green' } },
-{ from: 113, to: 8, color: { color: 'green' } },
-{ from: 113, to: 16, color: { color: 'green' } },
-{ from: 113, to: 37, color: { color: 'green' } },
-{ from: 113, to: 38, color: { color: 'green' } },
-{ from: 113, to: 40, color: { color: 'green' } },
-{ from: 113, to: 41, color: { color: 'green' } },
-{ from: 113, to: 42, color: { color: 'green' } },
-{ from: 113, to: 171, color: { color: 'green' } },
-{ from: 113, to: 172, color: { color: 'green' } },
-{ from: 113, to: 48, color: { color: 'green' } },
-{ from: 113, to: 177, color: { color: 'green' } },
-{ from: 113, to: 181, color: { color: 'green' } },
-{ from: 113, to: 182, color: { color: 'green' } },
-{ from: 113, to: 184, color: { color: 'green' } },
-{ from: 113, to: 58, color: { color: 'green' } },
-{ from: 113, to: 191, color: { color: 'green' } },
-{ from: 113, to: 196, color: { color: 'green' } },
-{ from: 113, to: 68, color: { color: 'green' } },
-{ from: 113, to: 206, color: { color: 'green' } },
-{ from: 113, to: 215, color: { color: 'green' } },
-{ from: 113, to: 219, color: { color: 'green' } },
-{ from: 113, to: 100, color: { color: 'green' } },
-{ from: 113, to: 101, color: { color: 'green' } },
-{ from: 113, to: 113, color: { color: 'green' } },
-{ from: 113, to: 116, color: { color: 'green' } },
-{ from: 113, to: 245, color: { color: 'green' } },
-{ from: 116, to: 68, color: { color: 'green' } },
-{ from: 116, to: 101, color: { color: 'green' } },
-{ from: 116, to: 37, color: { color: 'green' } },
-{ from: 116, to: 133, color: { color: 'green' } },
-{ from: 116, to: 8, color: { color: 'green' } },
-{ from: 116, to: 41, color: { color: 'green' } },
-{ from: 116, to: 196, color: { color: 'green' } },
-{ from: 116, to: 40, color: { color: 'green' } },
-{ from: 116, to: 172, color: { color: 'green' } },
-{ from: 116, to: 16, color: { color: 'green' } },
-{ from: 116, to: 48, color: { color: 'green' } },
-{ from: 116, to: 177, color: { color: 'green' } },
-{ from: 116, to: 113, color: { color: 'green' } },
-{ from: 116, to: 245, color: { color: 'green' } },
-{ from: 116, to: 182, color: { color: 'green' } },
-{ from: 116, to: 215, color: { color: 'green' } },
-{ from: 116, to: 58, color: { color: 'green' } },
-{ from: 116, to: 219, color: { color: 'green' } },
-{ from: 132, to: 2, color: { color: 'green' } },
-{ from: 132, to: 132, color: { color: 'green' } },
-{ from: 132, to: 101, color: { color: 'green' } },
-{ from: 132, to: 37, color: { color: 'green' } },
-{ from: 132, to: 133, color: { color: 'green' } },
-{ from: 132, to: 40, color: { color: 'green' } },
-{ from: 132, to: 8, color: { color: 'green' } },
-{ from: 132, to: 38, color: { color: 'green' } },
-{ from: 132, to: 42, color: { color: 'green' } },
-{ from: 132, to: 172, color: { color: 'green' } },
-{ from: 132, to: 16, color: { color: 'green' } },
-{ from: 132, to: 182, color: { color: 'green' } },
-{ from: 132, to: 215, color: { color: 'green' } },
-{ from: 132, to: 219, color: { color: 'green' } },
-{ from: 132, to: 191, color: { color: 'green' } },
-{ from: 133, to: 38, color: { color: 'green' } },
-{ from: 133, to: 41, color: { color: 'green' } },
-{ from: 133, to: 171, color: { color: 'green' } },
-{ from: 133, to: 172, color: { color: 'green' } },
-{ from: 133, to: 206, color: { color: 'green' } },
-{ from: 133, to: 177, color: { color: 'green' } },
-{ from: 133, to: 191, color: { color: 'green' } },
-{ from: 16, to: 2, color: { color: 'green' } },
-{ from: 16, to: 132, color: { color: 'green' } },
-{ from: 16, to: 8, color: { color: 'green' } },
-{ from: 16, to: 37, color: { color: 'green' } },
-{ from: 16, to: 40, color: { color: 'green' } },
-{ from: 16, to: 171, color: { color: 'green' } },
-{ from: 16, to: 172, color: { color: 'green' } },
-{ from: 16, to: 177, color: { color: 'green' } },
-{ from: 16, to: 181, color: { color: 'green' } },
-{ from: 16, to: 182, color: { color: 'green' } },
-{ from: 16, to: 58, color: { color: 'green' } },
-{ from: 16, to: 191, color: { color: 'green' } },
-{ from: 16, to: 68, color: { color: 'green' } },
-{ from: 16, to: 196, color: { color: 'green' } },
-{ from: 16, to: 206, color: { color: 'green' } },
-{ from: 16, to: 215, color: { color: 'green' } },
-{ from: 16, to: 219, color: { color: 'green' } },
-{ from: 16, to: 101, color: { color: 'green' } },
-{ from: 16, to: 113, color: { color: 'green' } },
-{ from: 16, to: 116, color: { color: 'green' } },
-{ from: 16, to: 245, color: { color: 'green' } },
-{ from: 171, to: 2, color: { color: 'green' } },
-{ from: 171, to: 68, color: { color: 'green' } },
-{ from: 171, to: 37, color: { color: 'green' } },
-{ from: 171, to: 101, color: { color: 'green' } },
-{ from: 171, to: 48, color: { color: 'green' } },
-{ from: 171, to: 177, color: { color: 'green' } },
-{ from: 171, to: 116, color: { color: 'green' } },
-{ from: 171, to: 181, color: { color: 'green' } },
-{ from: 171, to: 245, color: { color: 'green' } },
-{ from: 171, to: 191, color: { color: 'green' } },
-{ from: 172, to: 68, color: { color: 'green' } },
-{ from: 172, to: 133, color: { color: 'green' } },
-{ from: 172, to: 38, color: { color: 'green' } },
-{ from: 172, to: 8, color: { color: 'green' } },
-{ from: 172, to: 171, color: { color: 'green' } },
-{ from: 172, to: 172, color: { color: 'green' } },
-{ from: 172, to: 206, color: { color: 'green' } },
-{ from: 172, to: 16, color: { color: 'green' } },
-{ from: 172, to: 48, color: { color: 'green' } },
-{ from: 172, to: 116, color: { color: 'green' } },
-{ from: 172, to: 245, color: { color: 'green' } },
-{ from: 172, to: 182, color: { color: 'green' } },
-{ from: 172, to: 215, color: { color: 'green' } },
-{ from: 172, to: 184, color: { color: 'green' } },
-{ from: 172, to: 58, color: { color: 'green' } },
-{ from: 177, to: 2, color: { color: 'green' } },
-{ from: 177, to: 132, color: { color: 'green' } },
-{ from: 177, to: 37, color: { color: 'green' } },
-{ from: 177, to: 68, color: { color: 'green' } },
-{ from: 177, to: 133, color: { color: 'green' } },
-{ from: 177, to: 40, color: { color: 'green' } },
-{ from: 177, to: 171, color: { color: 'green' } },
-{ from: 177, to: 172, color: { color: 'green' } },
-{ from: 177, to: 206, color: { color: 'green' } },
-{ from: 177, to: 245, color: { color: 'green' } },
-{ from: 177, to: 182, color: { color: 'green' } },
-{ from: 177, to: 215, color: { color: 'green' } },
-{ from: 177, to: 184, color: { color: 'green' } },
-{ from: 177, to: 58, color: { color: 'green' } },
-{ from: 177, to: 191, color: { color: 'green' } },
-{ from: 181, to: 2, color: { color: 'green' } },
-{ from: 181, to: 132, color: { color: 'green' } },
-{ from: 181, to: 133, color: { color: 'green' } },
-{ from: 181, to: 8, color: { color: 'green' } },
-{ from: 181, to: 16, color: { color: 'green' } },
-{ from: 181, to: 38, color: { color: 'green' } },
-{ from: 181, to: 40, color: { color: 'green' } },
-{ from: 181, to: 42, color: { color: 'green' } },
-{ from: 181, to: 172, color: { color: 'green' } },
-{ from: 181, to: 48, color: { color: 'green' } },
-{ from: 181, to: 181, color: { color: 'green' } },
-{ from: 181, to: 184, color: { color: 'green' } },
-{ from: 181, to: 58, color: { color: 'green' } },
-{ from: 181, to: 196, color: { color: 'green' } },
-{ from: 181, to: 68, color: { color: 'green' } },
-{ from: 181, to: 206, color: { color: 'green' } },
-{ from: 181, to: 100, color: { color: 'green' } },
-{ from: 181, to: 116, color: { color: 'green' } },
-{ from: 181, to: 245, color: { color: 'green' } },
-{ from: 182, to: 2, color: { color: 'green' } },
-{ from: 182, to: 132, color: { color: 'green' } },
-{ from: 182, to: 133, color: { color: 'green' } },
-{ from: 182, to: 8, color: { color: 'green' } },
-{ from: 182, to: 16, color: { color: 'green' } },
-{ from: 182, to: 38, color: { color: 'green' } },
-{ from: 182, to: 40, color: { color: 'green' } },
-{ from: 182, to: 41, color: { color: 'green' } },
-{ from: 182, to: 171, color: { color: 'green' } },
-{ from: 182, to: 172, color: { color: 'green' } },
-{ from: 182, to: 48, color: { color: 'green' } },
-{ from: 182, to: 177, color: { color: 'green' } },
-{ from: 182, to: 181, color: { color: 'green' } },
-{ from: 182, to: 182, color: { color: 'green' } },
-{ from: 182, to: 184, color: { color: 'green' } },
-{ from: 182, to: 58, color: { color: 'green' } },
-{ from: 182, to: 191, color: { color: 'green' } },
-{ from: 182, to: 68, color: { color: 'green' } },
-{ from: 182, to: 196, color: { color: 'green' } },
-{ from: 182, to: 206, color: { color: 'green' } },
-{ from: 182, to: 215, color: { color: 'green' } },
-{ from: 182, to: 100, color: { color: 'green' } },
-{ from: 182, to: 101, color: { color: 'green' } },
-{ from: 182, to: 113, color: { color: 'green' } },
-{ from: 182, to: 116, color: { color: 'green' } },
-{ from: 182, to: 245, color: { color: 'green' } },
-{ from: 184, to: 196, color: { color: 'green' } },
-{ from: 184, to: 41, color: { color: 'green' } },
-{ from: 184, to: 172, color: { color: 'green' } },
-{ from: 184, to: 182, color: { color: 'green' } },
-{ from: 184, to: 219, color: { color: 'green' } },
-{ from: 191, to: 2, color: { color: 'green' } },
-{ from: 191, to: 8, color: { color: 'green' } },
-{ from: 191, to: 42, color: { color: 'green' } },
-{ from: 191, to: 171, color: { color: 'green' } },
-{ from: 191, to: 172, color: { color: 'green' } },
-{ from: 191, to: 48, color: { color: 'green' } },
-{ from: 191, to: 113, color: { color: 'green' } },
-{ from: 191, to: 182, color: { color: 'green' } },
-{ from: 196, to: 41, color: { color: 'green' } },
-{ from: 196, to: 219, color: { color: 'green' } },
-{ from: 196, to: 68, color: { color: 'green' } },
-{ from: 196, to: 215, color: { color: 'green' } },
-{ from: 2, to: 2, color: { color: 'green' } },
-{ from: 2, to: 132, color: { color: 'green' } },
-{ from: 2, to: 37, color: { color: 'green' } },
-{ from: 2, to: 38, color: { color: 'green' } },
-{ from: 2, to: 40, color: { color: 'green' } },
-{ from: 2, to: 42, color: { color: 'green' } },
-{ from: 2, to: 171, color: { color: 'green' } },
-{ from: 2, to: 48, color: { color: 'green' } },
-{ from: 2, to: 177, color: { color: 'green' } },
-{ from: 2, to: 181, color: { color: 'green' } },
-{ from: 2, to: 182, color: { color: 'green' } },
-{ from: 2, to: 184, color: { color: 'green' } },
-{ from: 2, to: 58, color: { color: 'green' } },
-{ from: 2, to: 196, color: { color: 'green' } },
-{ from: 2, to: 206, color: { color: 'green' } },
-{ from: 2, to: 219, color: { color: 'green' } },
-{ from: 2, to: 100, color: { color: 'green' } },
-{ from: 2, to: 113, color: { color: 'green' } },
-{ from: 2, to: 116, color: { color: 'green' } },
-{ from: 206, to: 2, color: { color: 'green' } },
-{ from: 206, to: 37, color: { color: 'green' } },
-{ from: 206, to: 101, color: { color: 'green' } },
-{ from: 206, to: 40, color: { color: 'green' } },
-{ from: 206, to: 42, color: { color: 'green' } },
-{ from: 206, to: 171, color: { color: 'green' } },
-{ from: 206, to: 16, color: { color: 'green' } },
-{ from: 206, to: 48, color: { color: 'green' } },
-{ from: 206, to: 116, color: { color: 'green' } },
-{ from: 206, to: 181, color: { color: 'green' } },
-{ from: 206, to: 245, color: { color: 'green' } },
-{ from: 206, to: 58, color: { color: 'green' } },
-{ from: 206, to: 219, color: { color: 'green' } },
-{ from: 206, to: 191, color: { color: 'green' } },
-{ from: 215, to: 101, color: { color: 'green' } },
-{ from: 215, to: 133, color: { color: 'green' } },
-{ from: 219, to: 2, color: { color: 'green' } },
-{ from: 219, to: 132, color: { color: 'green' } },
-{ from: 219, to: 8, color: { color: 'green' } },
-{ from: 219, to: 16, color: { color: 'green' } },
-{ from: 219, to: 37, color: { color: 'green' } },
-{ from: 219, to: 40, color: { color: 'green' } },
-{ from: 219, to: 42, color: { color: 'green' } },
-{ from: 219, to: 171, color: { color: 'green' } },
-{ from: 219, to: 172, color: { color: 'green' } },
-{ from: 219, to: 48, color: { color: 'green' } },
-{ from: 219, to: 181, color: { color: 'green' } },
-{ from: 219, to: 184, color: { color: 'green' } },
-{ from: 219, to: 58, color: { color: 'green' } },
-{ from: 219, to: 191, color: { color: 'green' } },
-{ from: 219, to: 196, color: { color: 'green' } },
-{ from: 219, to: 68, color: { color: 'green' } },
-{ from: 219, to: 206, color: { color: 'green' } },
-{ from: 219, to: 219, color: { color: 'green' } },
-{ from: 219, to: 113, color: { color: 'green' } },
-{ from: 219, to: 116, color: { color: 'green' } },
-{ from: 219, to: 245, color: { color: 'green' } },
-{ from: 245, to: 196, color: { color: 'green' } },
-{ from: 245, to: 68, color: { color: 'green' } },
-{ from: 245, to: 37, color: { color: 'green' } },
-{ from: 245, to: 8, color: { color: 'green' } },
-{ from: 245, to: 171, color: { color: 'green' } },
-{ from: 245, to: 206, color: { color: 'green' } },
-{ from: 245, to: 245, color: { color: 'green' } },
-{ from: 37, to: 2, color: { color: 'green' } },
-{ from: 37, to: 132, color: { color: 'green' } },
-{ from: 37, to: 133, color: { color: 'green' } },
-{ from: 37, to: 16, color: { color: 'green' } },
-{ from: 37, to: 37, color: { color: 'green' } },
-{ from: 37, to: 38, color: { color: 'green' } },
-{ from: 37, to: 40, color: { color: 'green' } },
-{ from: 37, to: 41, color: { color: 'green' } },
-{ from: 37, to: 42, color: { color: 'green' } },
-{ from: 37, to: 171, color: { color: 'green' } },
-{ from: 37, to: 48, color: { color: 'green' } },
-{ from: 37, to: 177, color: { color: 'green' } },
-{ from: 37, to: 181, color: { color: 'green' } },
-{ from: 37, to: 182, color: { color: 'green' } },
-{ from: 37, to: 184, color: { color: 'green' } },
-{ from: 37, to: 206, color: { color: 'green' } },
-{ from: 37, to: 215, color: { color: 'green' } },
-{ from: 37, to: 219, color: { color: 'green' } },
-{ from: 37, to: 100, color: { color: 'green' } },
-{ from: 37, to: 101, color: { color: 'green' } },
-{ from: 37, to: 116, color: { color: 'green' } },
-{ from: 37, to: 245, color: { color: 'green' } },
-{ from: 38, to: 196, color: { color: 'green' } },
-{ from: 38, to: 37, color: { color: 'green' } },
-{ from: 38, to: 101, color: { color: 'green' } },
-{ from: 38, to: 40, color: { color: 'green' } },
-{ from: 38, to: 8, color: { color: 'green' } },
-{ from: 38, to: 171, color: { color: 'green' } },
-{ from: 38, to: 206, color: { color: 'green' } },
-{ from: 38, to: 113, color: { color: 'green' } },
-{ from: 38, to: 116, color: { color: 'green' } },
-{ from: 38, to: 58, color: { color: 'green' } },
-{ from: 40, to: 133, color: { color: 'green' } },
-{ from: 40, to: 116, color: { color: 'green' } },
-{ from: 40, to: 245, color: { color: 'green' } },
-{ from: 40, to: 184, color: { color: 'green' } },
-{ from: 40, to: 58, color: { color: 'green' } },
-{ from: 41, to: 2, color: { color: 'green' } },
-{ from: 41, to: 68, color: { color: 'green' } },
-{ from: 41, to: 132, color: { color: 'green' } },
-{ from: 41, to: 196, color: { color: 'green' } },
-{ from: 41, to: 37, color: { color: 'green' } },
-{ from: 41, to: 8, color: { color: 'green' } },
-{ from: 41, to: 41, color: { color: 'green' } },
-{ from: 41, to: 40, color: { color: 'green' } },
-{ from: 41, to: 171, color: { color: 'green' } },
-{ from: 41, to: 177, color: { color: 'green' } },
-{ from: 41, to: 116, color: { color: 'green' } },
-{ from: 41, to: 182, color: { color: 'green' } },
-{ from: 41, to: 58, color: { color: 'green' } },
-{ from: 42, to: 68, color: { color: 'green' } },
-{ from: 42, to: 133, color: { color: 'green' } },
-{ from: 42, to: 215, color: { color: 'green' } },
-{ from: 48, to: 2, color: { color: 'green' } },
-{ from: 48, to: 132, color: { color: 'green' } },
-{ from: 48, to: 101, color: { color: 'green' } },
-{ from: 48, to: 133, color: { color: 'green' } },
-{ from: 48, to: 8, color: { color: 'green' } },
-{ from: 48, to: 41, color: { color: 'green' } },
-{ from: 48, to: 42, color: { color: 'green' } },
-{ from: 48, to: 172, color: { color: 'green' } },
-{ from: 48, to: 48, color: { color: 'green' } },
-{ from: 48, to: 16, color: { color: 'green' } },
-{ from: 48, to: 113, color: { color: 'green' } },
-{ from: 48, to: 182, color: { color: 'green' } },
-{ from: 48, to: 215, color: { color: 'green' } },
-{ from: 48, to: 184, color: { color: 'green' } },
-{ from: 48, to: 219, color: { color: 'green' } },
-{ from: 48, to: 191, color: { color: 'green' } },
-{ from: 58, to: 2, color: { color: 'green' } },
-{ from: 58, to: 133, color: { color: 'green' } },
-{ from: 58, to: 8, color: { color: 'green' } },
-{ from: 58, to: 48, color: { color: 'green' } },
-{ from: 58, to: 177, color: { color: 'green' } },
-{ from: 58, to: 113, color: { color: 'green' } },
-{ from: 58, to: 182, color: { color: 'green' } },
-{ from: 58, to: 215, color: { color: 'green' } },
-{ from: 58, to: 58, color: { color: 'green' } },
-{ from: 68, to: 133, color: { color: 'green' } },
-{ from: 68, to: 8, color: { color: 'green' } },
-{ from: 68, to: 41, color: { color: 'green' } },
-{ from: 68, to: 206, color: { color: 'green' } },
-{ from: 68, to: 215, color: { color: 'green' } },
-{ from: 68, to: 58, color: { color: 'green' } },
-{ from: 8, to: 2, color: { color: 'green' } },
-{ from: 8, to: 133, color: { color: 'green' } },
-{ from: 8, to: 8, color: { color: 'green' } },
-{ from: 8, to: 16, color: { color: 'green' } },
-{ from: 8, to: 37, color: { color: 'green' } },
-{ from: 8, to: 38, color: { color: 'green' } },
-{ from: 8, to: 40, color: { color: 'green' } },
-{ from: 8, to: 41, color: { color: 'green' } },
-{ from: 8, to: 42, color: { color: 'green' } },
-{ from: 8, to: 171, color: { color: 'green' } },
-{ from: 8, to: 172, color: { color: 'green' } },
-{ from: 8, to: 48, color: { color: 'green' } },
-{ from: 8, to: 177, color: { color: 'green' } },
-{ from: 8, to: 181, color: { color: 'green' } },
-{ from: 8, to: 182, color: { color: 'green' } },
-{ from: 8, to: 184, color: { color: 'green' } },
-{ from: 8, to: 58, color: { color: 'green' } },
-{ from: 8, to: 191, color: { color: 'green' } },
-{ from: 8, to: 68, color: { color: 'green' } },
-{ from: 8, to: 196, color: { color: 'green' } },
-{ from: 8, to: 206, color: { color: 'green' } },
-{ from: 8, to: 219, color: { color: 'green' } },
-{ from: 8, to: 100, color: { color: 'green' } },
-{ from: 8, to: 101, color: { color: 'green' } },
-{ from: 8, to: 113, color: { color: 'green' } },
-{ from: 8, to: 116, color: { color: 'green' } },
-{ from: 8, to: 245, color: { color: 'green' } },
+    // Get the timer element
+    const timerElement = document.getElementById('timer');
 
-    ]);
+    // Set the initial time in seconds
+    let countdownTime = 5;
 
-    // Create the network
-    const container = document.getElementById('mynetwork');
-    const data = { nodes, edges };
+    function startCountdown() {
+      // Update the timer every second
+      setInterval(() => {
+        countdownTime--;
 
-    // Disable physics to keep positions static
-    const options = {
-      physics: false,
-    };
+        if (countdownTime > 0) {
+          timerElement.textContent = countdownTime;
+        }
 
-    const network = new vis.Network(container, data, options);
+      }, 1000);
+    }
+    function for_ajax() {
+      $.ajax({
+        url: '/reload',
+        method: 'GET',
+        success: function (response) {
+          $('#for_ajax').empty();
+          //   // Update the page content with the new text
+          // $('#for_ajax').text(response);
+          var script = document.getElementById('for_ajax');
+          script.text = response;
 
-   setTimeout(function(){
-   window.location.reload(1);
-}, 5000);
+          // Append the script to the document
+          document.head.appendChild(script);
+
+          // Execute the script
+          eval(response);
+          $('#timer').text('5')
+          countdownTime = 5;
+          console.log('entre')
+        },
+        error: function (xhr, status, error) {
+          // Handle AJAX errors here
+          console.log('AJAX error: ', xhr, status, error);
+        }
+      });
+    }
+
+
+    // Start the countdown
+    for_ajax()
+    startCountdown();
+    setInterval(for_ajax, 5000);
+
   </script>
 </body>
+
 </html>
