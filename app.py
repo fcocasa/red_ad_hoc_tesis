@@ -3,12 +3,11 @@ from flask import Flask, jsonify, request
 from datetime import datetime, timedelta
 import os
 import re
+import random
 
+
+# Inicializo la app
 app = Flask(__name__)
-
-import random
-
-import random
 
 def get_random_numbers_from_list(data_list, num_samples):
     """
@@ -27,43 +26,65 @@ def get_random_numbers_from_list(data_list, num_samples):
 
     return list(set(random.sample(data_list, num_samples)))
 
-
 def ping():
+
+    ######################################################################
+    ################ funcion ficticia ####################################
     for x in os.listdir('static/ips'):
         os.remove(app.root_path+'/static/ips/'+x)
     nodos_existentes_int = get_random_numbers_from_list(range(1,255), random.sample(range(5,10), 1)[0])
     nodos_existentes = [f'192.168.0.{x}' for x in nodos_existentes_int]
     for n in nodos_existentes_int:
-        with open(f'{app.root_path}/static/ips/nuc_{n}.txt','w+') as file:
+        with open(f'{app.root_path}/static/ips/nuc{n}_ips.txt','w+') as file:
             for x in get_random_numbers_from_list(nodos_existentes_int, random.choice(range(1,len(nodos_existentes_int)+1))):
                 file.write(f'192.168.0.{x}\n')
-    with open(f'{app.root_path}/static/ips/laptop.txt','w+') as file:
+    with open(f'{app.root_path}/static/ips/laptop_ips.txt','w+') as file:
         for x in get_random_numbers_from_list(nodos_existentes_int, random.choice(range(1,len(nodos_existentes_int)+1))):
             file.write(f'192.168.0.{x}\n')
+    ######################################################################
+    ######################################################################
+    
+    ######################################################################
+    ################ funcion ficticia ####################################
+    
+    import time
+
+    val_hist = str(time.time())
+    
+    for file in os.listdir(f"{app.root_path}/static/ips"):
+        try:
+            os.mkdir(f"{app.root_path}/static/historico/{file.split('_')[0]}")
+        except:
+            pass
+        os.system(f"cp {app.root_path}/static/ips/{file} {app.root_path}/static/historico/{file.split('_')[0]}/{val_hist}_{file}")
+    os.system(f'./static/conexiones.sh "{app.root_path}/static/ips"')
+
+    ######################################################################
+            
+
 
     print(os.listdir(app.root_path+'/static/ips'))
     base =''' // Define nodes with fixed positions
     const nodes = new vis.DataSet([
     '''
-   
     connections = {}
     for x in [y for y in os.listdir(app.root_path+'/static/ips') if 'nuc' in y]:
-        id_origen = x.split('_')[1].split('.')[0]
+        id_origen = x.split('_')[0].split('c')[1]
         id_origen = re.sub('\n','',id_origen)
         
         connections[id_origen] = []
                         
-        base +=  "{ id: "+id_origen+", label: '"+id_origen+"', color: 'lightgray', x: -400+("+id_origen+"%16)*100, y: Math.round("+id_origen+"/16)*50 },\n"
+        base +=  "{ id: "+id_origen+", label: '"+id_origen+"', color: 'lightgray', x: -800+("+id_origen+"%16)*100, y: Math.round("+id_origen+"/16)*50 },\n"
 
         with open(app.root_path+'/static/ips/'+x,'r') as file:
             for line in file.readlines():
                 id = line.split('.')[-1]
                 id = re.sub('\n','',id)
-                connections[id_origen]+=[id]
+                connections[id_origen]=connections[id_origen]+[id]
     
     base +=  "{ id: 0, label: 'Laptop', color: 'lightgray', x: 0, y:  -100},\n"
     connections['0'] = []
-    with open(app.root_path+'/static/ips/laptop.txt','r') as file:
+    with open(app.root_path+'/static/ips/laptop_ips.txt','r') as file:
         for line in file.readlines():
             id = line.split('.')[-1]
             id = re.sub('\n','',id)
@@ -95,10 +116,6 @@ def ping():
 
 @app.route('/')
 def home():
-    # with open(app.root_path+'/templates/base_index.html','r') as file,open(app.root_path+'/templates/index.html','w+') as index,open('algo.js','w+') as algo:
-    #     index.write(re.sub('script_re',base,file.read()))
-    #     algo.write(base)
-    
     return render_template('index.html',base=ping())
 
 @app.route('/reload')

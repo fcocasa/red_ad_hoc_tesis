@@ -3,5 +3,6 @@ algo.js
 algo.html
 ad-hoc.py
 satatic/ips/*.txt
+satatic/historico/*.txt
 templates/old_index.html
 templates/base.html

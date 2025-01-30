@@ -32,11 +32,6 @@
         <div class="col-12 text-center" style="margin-top: 100px;">
           <h1>Conexiones de las NUC</h1>
         </div>
-        <div class="col-12" style="margin-top: 50px;">
-
-          <h3 class="col-12 text-center">Tiempo restante antes de la proxima actualización: <span id="timer">5</span>
-          </h3>
-        </div>
         <div class="row" id="mynetwork"></div>
       </div>
 
@@ -53,23 +48,8 @@
   </script>
   <script>
     // Get the timer element
-    const timerElement = document.getElementById('timer');
 
-    // Set the initial time in seconds
-    let countdownTime = 5;
-
-    function startCountdown() {
-      // Update the timer every second
-      setInterval(() => {
-        countdownTime--;
-
-        if (countdownTime > 0) {
-          timerElement.textContent = countdownTime;
-        }
-
-      }, 1000);
-    }
-    function for_ajax() {
+    function reload_graph() {
       $.ajax({
         url: '/reload',
         method: 'GET',
@@ -98,9 +78,8 @@
 
 
     // Start the countdown
-    for_ajax()
-    startCountdown();
-    setInterval(for_ajax, 5000);
+    reload_graph()
+    setInterval(reload_graph, 5000);
 
   </script>
 </body>
